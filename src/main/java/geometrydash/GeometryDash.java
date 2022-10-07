@@ -10,8 +10,25 @@ public class GeometryDash {
      * @return true if the play completes the level and false otherwise
      */
     public static boolean isSuccessfulPlay(String level, String play) {
-        // TODO: Implement this method
-        return false;
+        if (level.charAt(0)=='^' || level.charAt(level.length()-1)=='^') {
+            return false;
+        }
+
+        //boolean successful=false;
+        int index=0;
+        //int position=index+Integer.parseInt(String.valueOf(play.charAt(index)));
+        int position=0;
+        while (position<level.length()-1) {
+            if (level.charAt(position+Integer.parseInt(String.valueOf(play.charAt(index))))!='_') {
+                return false;
+            } else {
+                position+=Integer.parseInt(String.valueOf(play.charAt(index)));
+                index++;
+            }
+            assert index<=play.length();
+        }
+
+        return true;
     }
 
     /**
