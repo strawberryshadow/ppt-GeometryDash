@@ -1,5 +1,6 @@
 package geometrydash;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class GeometryDash {
@@ -10,24 +11,70 @@ public class GeometryDash {
      * @return true if the play completes the level and false otherwise
      */
     public static boolean isSuccessfulPlay(String level, String play) {
-        if (level.charAt(0)=='^' || level.charAt(level.length()-1)=='^') {
+        if (!validLevel(level)) {
             return false;
         }
 
-        //boolean successful=false;
         int index=0;
-        //int position=index+Integer.parseInt(String.valueOf(play.charAt(index)));
         int position=0;
+
         while (position<level.length()-1) {
-            if (level.charAt(position+Integer.parseInt(String.valueOf(play.charAt(index))))!='_') {
+
+            if (level.charAt(position+Integer.parseInt(String.valueOf(play.charAt(index))))=='^') {
                 return false;
             } else {
                 position+=Integer.parseInt(String.valueOf(play.charAt(index)));
                 index++;
             }
+
+            if (position>level.length()-1) {
+                return false;
+            }
+
             assert index<=play.length();
         }
 
+        return true;
+    }
+
+    private static boolean isSuccessfulPlay(String level, String play, int eStart, int eRest) {
+        int index=0;
+        int position=0;
+        int e=eStart;
+
+        while (index<play.length()) {
+
+            if (position+Integer.parseInt(String.valueOf(play.charAt(index)))>=level.length()) {
+                return false;
+            }
+
+            if (level.charAt(position+Integer.parseInt(String.valueOf(play.charAt(index))))=='^') {
+                return false;
+            } else {
+                e-=Integer.parseInt(String.valueOf(play.charAt(index)));
+                if (e<0) {
+                    return false;
+                } else if (Integer.parseInt(String.valueOf(play.charAt(index)))==0 && e<3) {
+                    e++;
+                }
+
+                if(level.charAt(position+Integer.parseInt(String.valueOf(play.charAt(index))))=='*'){
+                    position+=Integer.parseInt(String.valueOf(play.charAt(index)));
+                    position+=4;
+                } else {
+                    position+=Integer.parseInt(String.valueOf(play.charAt(index)));
+                }
+                index++;
+            }
+
+            if (position>level.length()) {
+                return false;
+            }
+        }
+
+        if (e<eRest) {
+            return false;
+        }
         return true;
     }
 
@@ -43,8 +90,26 @@ public class GeometryDash {
      */
     public static Set<String> successfulPlays(String level, Set<String> possiblePlays,
                                               int startingEnergy, int targetRestingEnergy) {
-        // TODO: Implement this method
-        return null;
+        Set<String> successful=new HashSet<>();
+
+        if (!validLevel(level)) {
+            return successful;
+        }
+
+        for (String s: possiblePlays.toArray(new String[0])) {
+            if (isSuccessfulPlay(level,s,startingEnergy,targetRestingEnergy)){
+                successful.add(s);
+            }
+        }
+
+        return successful;
+    }
+
+    private static boolean validLevel(String level) {
+        if (level.charAt(0)=='^' || level.charAt(level.length()-1)=='^') {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -57,7 +122,11 @@ public class GeometryDash {
      */
     public static String shortestPlay(String level, int startingEnergy, int targetRestingEnergy)
             throws UnplayableLevelException {
-        // TODO: Implement this method
+        if (!validLevel(level)) {
+            throw new UnplayableLevelException();
+        }
+
+
         return null;
     }
 

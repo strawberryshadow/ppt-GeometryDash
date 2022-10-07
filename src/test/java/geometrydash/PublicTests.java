@@ -35,6 +35,7 @@ public class PublicTests {
         possiblePlays.add("313");
         possiblePlays.add("3131");
         possiblePlays.add("1231");
+
         successfulPlays.add("3112");
         successfulPlays.add("313");
 
